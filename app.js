@@ -4,12 +4,17 @@ const cors = require('cors');
 const {CLIENT_ORIGIN} = require('./config');
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
-const mongo = require('mongodb');
 const mongoose = require('mongoose');
-var db = mongoose.connection;
 
 //Model
 var MusicInput = require('./models/music')
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+var router = express.Router();
+
+//MongoDb
+mongoose.connect('mongodb://localhost:27017/music');
 
 app.get('/api/*', (req, res) => {
   res.json({ok: true});
@@ -22,18 +27,23 @@ app.get('/', (req, res) => {
 });
 
 
-app.post('/album/', (req, res) => {
-  res.json({
-    "Artist": `${req.headers.artist}`,
-    "Album": `${req.headers.album}`,
-    "Rating": `${req.headers.rating}`
-  });
+app.post('/rating/:id', (req, res) => {
   var submission = new MusicInput();
   submission.artist = req.headers.artist;
   submission.album = req.headers.album;
   submission.rating = req.headers.rating;
+  submission.identification = req.params.id;
+  console.log(req.params.id);
   MusicInput.create(submission, function(err, submission) {
-    console.log("Adding submission");
+    if(err) {
+      console.log(err);
+      console.log(`Error creating Data point: ${err[0]}`);
+      return err;
+    }
+    else {
+      console.log("Adding submission");
+      res.status(201).send();
+    }
   })
 });
 
@@ -42,6 +52,9 @@ app.use(
       origin: CLIENT_ORIGIN
   })
 );
+
+app.use(cors());
+app.use('/api', router);
 
 const PORT = 8080
 
