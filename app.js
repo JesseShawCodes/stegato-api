@@ -26,6 +26,9 @@ app.get('/', (req, res) => {
   console.log("Get request made to /")
 });
 
+app.post('/board', (req, res) => {
+  console.log(`/board search artist: ${req.headers.artist}`);
+})
 
 app.post('/rating/:id', (req, res) => {
   var submission = new MusicInput();
