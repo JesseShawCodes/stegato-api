@@ -27,22 +27,20 @@ app.get('/', (req, res) => {
   console.log("Get request made to /")
 });
 
+//Itunes API Links
 var itunesUrl = "https://itunes.apple.com/search?term=";
 var albumUrl = "https://itunes.apple.com/lookup?id=";
 
 app.post('/board', (req, res) => {
   let artist = req.headers.artist;
-  fetch(`${itunesUrl}${req.headers.artist}`).then(function (response){
+  let searchTerm = artist.split(' ').join('+');
+  fetch(`${itunesUrl}${searchTerm}`).then(function (response){
     return response.json();
   })
   .then(function (json){
-      // console.log(json.results);
       for (var i = 0; i < json.results.length; i++) {
-        // console.log(json.results[i].artistName);
         if (json.results[i].artistName == artist) {
-          // console.log("It's a match!");
           let artistId = json.results[i].artistId
-          console.log(`${albumUrl}${artistId}&entity=album`)
           fetch(`${albumUrl}${artistId}&entity=album`).then(function(response) {
             return response.json()
           })
