@@ -5,6 +5,7 @@ const {CLIENT_ORIGIN} = require('./config');
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 const mongoose = require('mongoose');
+const fetch = require('node-fetch');
 
 //Model
 var MusicInput = require('./models/music')
@@ -26,8 +27,33 @@ app.get('/', (req, res) => {
   console.log("Get request made to /")
 });
 
+var itunesUrl = "https://itunes.apple.com/search?term=";
+var albumUrl = "https://itunes.apple.com/lookup?id=";
+
 app.post('/board', (req, res) => {
-  console.log(`/board search artist: ${req.headers.artist}`);
+  let artist = req.headers.artist;
+  fetch(`${itunesUrl}${req.headers.artist}`).then(function (response){
+    return response.json();
+  })
+  .then(function (json){
+      // console.log(json.results);
+      for (var i = 0; i < json.results.length; i++) {
+        // console.log(json.results[i].artistName);
+        if (json.results[i].artistName == artist) {
+          // console.log("It's a match!");
+          let artistId = json.results[i].artistId
+          console.log(`${albumUrl}${artistId}&entity=album`)
+          fetch(`${albumUrl}${artistId}&entity=album`).then(function(response) {
+            return response.json()
+          })
+          .then(function (json) {
+            let albumResults = json.results;
+            console.log(albumResults);
+          })
+        }
+        break
+      }
+  });
 })
 
 app.post('/rating/:id', (req, res) => {
