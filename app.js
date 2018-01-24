@@ -58,31 +58,6 @@ app.use('*', (req, res) => {
   return res.status(404).json({ message: 'Not Found' });
 });
 
-/*
-app.get('/music/default', (req, res) => {
-  return res.json({
-    Hello: 'World'
-  });
-});
-
-app.post('/', (req, res) => {
-  console.log("Post Made")
-  /*
-  res.json({
-    "Artist": `${req.headers.artist}`,
-    "Album": `${req.headers.album}`,
-    "Rating": `${req.headers.rating}`,
-  });
-  var submission = new MusicInput();
-  submission.artist = req.headers.artist;
-  submission.album = req.headers.album;
-  submission.rating = req.headers.rating;
-  MusicInput.create(submission, function(err, submission) {
-    console.log("Adding submission");
-  })
-
-});
-*/
 
 // Referenced by both runServer and closeServer. closeServer
 // assumes runServer has run and set `server` to a server object

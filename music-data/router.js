@@ -3,42 +3,34 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongo = require('mongodb');
 const mongoose = require('mongoose');
-
-
-const {User} = require('./models');
+const DATABASE_URL = require('../config');
+const cors = require('cors');
 
 const router = express.Router();
 
 const jsonParser = bodyParser.json();
 
-router.get('/default', (req, res) => {
-    return res.json({
-      Hello: 'World'
-    });
-});
+var { MusicInput } = require('./models')
 
-var MusicInput = require('./models')
-
-router.post('/:id', (req, res) => {
+router.post('/:id', jsonParser, (req, res) => {
+    console.log(req.body);
     res.json({
-        "Artist": `${req.headers.artist}`,
-        "Album": `${req.headers.album}`,
-        "Genre": `${req.headers.genre}`,
-        "Artwork": `${req.headers.artwork}`,
-        "Rating": `${req.headers.rating}`,
-        "User": `${req.params.id}`,
-        "Itunes-Link": `${req.params.buyonitunes}`
-    });
+        "We": "received it"
+    })
     var submission = new MusicInput();
-    /*
-    var submission = new MusicInput();
-    submission.artist = req.headers.artist;
-    submission.album = req.headers.album;
-    submission.rating = req.headers.rating;
+    submission.artist = req.body.Artist;
+    submission.album = req.body.album;
+    submission.artwork = req.body.artwork;
+    submission.genre = req.body.genre;
+    submission.itunesLink = req.body.buyonitunes;
+    submission.rating = req.body.Rating;
+    submission.user = req.params.id;
+    submission.collectionId = req.body.collectionid;
+    console.log(submission);
     MusicInput.create(submission, function(err, submission) {
       console.log("Adding submission");
+      console.log(err);
     })
-    */
 });
 
 module.exports = {router};
