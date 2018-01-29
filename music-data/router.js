@@ -52,4 +52,15 @@ router.get('/:id', jsonParser, (req, res) => {
         })
 })
 
+router.delete('/', jsonParser, (req, res) => {
+    console.log(req.body.mongoid)
+    MusicInput.findByIdAndRemove(`${req.body.mongoid}`, function(err, doc) {
+        console.log(err);
+        if (err) {
+            return sendError(res, err)
+        }
+    });
+    res.status(204).end();
+})
+
 module.exports = {router};
