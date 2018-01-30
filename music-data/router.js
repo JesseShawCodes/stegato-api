@@ -27,11 +27,13 @@ router.post('/:id', jsonParser, (req, res) => {
     submission.user = req.params.id;
     submission.collectionId = req.body.collectionid;
     console.log(submission);
+    MusicInput.findOneAndUpdate({user: `${submission.user}`, collectionId: `${submission.collectionId}`})
     MusicInput.create(submission, function(err, submission) {
       console.log("Adding submission");
-      // console.log(err);
+      if (err) { throw err; }
     })
 });
+
 
 router.get('/:id', jsonParser, (req, res) => {
     console.log(req.params.id);
