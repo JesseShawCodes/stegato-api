@@ -3,7 +3,7 @@ global.DATABASE_URL = 'mongodb://localhost/jwt-auth-demo-test';
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 
-const {app, runServer, closeServer} = require('../server');
+const {app, runServer, closeServer} = require('../app');
 const {User} = require('../users');
 
 const expect = chai.expect;

@@ -47,6 +47,10 @@ app.use('/music-data/', musicRouter);
 
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
+app.get('/api/*', (req, res) => {
+  res.json({ok: true});
+});
+
 // A protected endpoint which needs a valid JWT to access it
 app.get('/api/protected', jwtAuth, (req, res) => {
   return res.json({
