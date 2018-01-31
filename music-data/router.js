@@ -13,37 +13,53 @@ const jsonParser = bodyParser.json();
 var { MusicInput } = require('./models')
 
 router.post('/:id', jsonParser, (req, res) => {
+    console.log("Add It!");
     MusicInput
         .find()
         .then(data => {
             for (var i = 0; i < data.length; i++) {
+                // console.log(req.body.user)
+                // console.log(data[i].user)
+                // console.log(req.body.collectionid)
+                // console.log(data[i].collectionId)
+                console.log(req.body.Rating)
                 if (req.body.user == data[i].user && req.body.collectionid == data[i].collectionId) {
-                    console.log(`Update this: ${data[i]}`);
-                    break
-                }
-            }
-            var submission = new MusicInput();
-            console.log(req.body)
-            submission.artist = req.body.Artist;
-            submission.album = req.body.album;
-            submission.artwork = req.body.artwork;
-            submission.genre = req.body.Genre;
-            submission.itunesLink = req.body.BuyOnItunes;
-            submission.rating = req.body.Rating;
-            submission.user = req.params.id;
-            submission.collectionId = req.body.collectionid;
-            console.log(submission);
-            MusicInput.create(submission, function(err, submission) {
-                console.log("Adding submission");
-                if (err) { 
-                    throw err; 
+                    MusicInput.findOneAndUpdate({user: req.body.user, collectionId: req.body.collectionid}, {rating: req.body.Rating}, function(error, doc) {
+                        if (error) {
+                            throw error
+                        }
+                        else {
+                            res.send("Rating has been updated");
+                        }
+                    })
+                    console.log("Rating has been updated")
                 }
                 else {
-                    res.json({
-                        "We": "received it"
+                    var submission = new MusicInput();
+                    console.log(req.body)
+                    submission.artist = req.body.Artist;
+                    submission.album = req.body.album;
+                    submission.artwork = req.body.artwork;
+                    submission.genre = req.body.Genre;
+                    submission.itunesLink = req.body.BuyOnItunes;
+                    submission.rating = req.body.Rating;
+                    submission.user = req.params.id;
+                    submission.collectionId = req.body.collectionid;
+                    console.log(submission);
+                    MusicInput.create(submission, function(err, submission) {
+                        console.log("Adding submission");
+                        if (err) { 
+                            throw err; 
+                        }
+                        else {
+                            res.json({
+                                "We": "received it"
+                            })
+                        }
                     })
                 }
-            })
+            }
+
         }
     )
 });
