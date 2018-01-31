@@ -13,11 +13,12 @@ const jsonParser = bodyParser.json();
 var { MusicInput } = require('./models')
 
 router.post('/:id', jsonParser, (req, res) => {
-    console.log("Add It!");
+    console.log(req.body);
     MusicInput
         .find()
         .then(data => {
             for (var i = 0; i < data.length; i++) {
+                console.log("Searching...")
                 // console.log(req.body.user)
                 // console.log(data[i].user)
                 // console.log(req.body.collectionid)
@@ -47,23 +48,22 @@ router.post('/:id', jsonParser, (req, res) => {
                     submission.collectionId = req.body.collectionid;
                     console.log(submission);
                     MusicInput.create(submission, function(err, submission) {
-                        console.log("Adding submission");
+                        console.log("Adding submission...")
                         if (err) { 
                             throw err; 
                         }
                         else {
-                            res.json({
-                                "We": "received it"
-                            })
+                            //Do Nothing
                         }
                     })
+                    break
                 }
             }
 
         }
     )
 });
-
+/*
 
 router.post('/:id', jsonParser, (req, res) => {
     var submission = new MusicInput();
@@ -89,7 +89,7 @@ router.post('/:id', jsonParser, (req, res) => {
         }
     })
 });
-
+*/
 
 router.get('/:id', jsonParser, (req, res) => {
     console.log(req.params.id);
