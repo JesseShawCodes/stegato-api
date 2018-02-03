@@ -12,18 +12,55 @@ const jsonParser = bodyParser.json();
 
 var { MusicInput } = require('./models')
 
+/*
+function updateRating(userInput, userDatabase, userCollectionId, collectionid) {
+    console.log("Updating rating");
+    if (req.body.user == data[i].user && req.body.collectionid == data[i].collectionId) {
+        MusicInput.findOneAndUpdate({user: req.body.user, collectionId: req.body.collectionid}, {rating: req.body.Rating}, function(error, doc) {
+            if (error) {
+                throw error
+            }
+            else {
+                res.send("Rating has been updated");
+            }
+        })
+    }
+}
+
+function addMusic(musicEntry) {
+    console.log(musicEntry)
+}
+
 router.post('/:id', jsonParser, (req, res) => {
-    console.log(req.body);
+    MusicInput
+        .find()
+        .then(data => {
+            if (data.length === 0) {
+                addMusic(data)
+            }
+            if (data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                    if (req.body.user == data[i].user && req.body.collectionid == data[i].collectionId) {
+                        console.log("It's a match");
+                    }
+                }
+            }
+        })
+})
+
+/*
+router.post('/:id', jsonParser, (req, res) => {
+    // console.log(req.body);
     MusicInput
         .find()
         .then(data => {
             for (var i = 0; i < data.length; i++) {
-                console.log("Searching...")
-                // console.log(req.body.user)
-                // console.log(data[i].user)
-                // console.log(req.body.collectionid)
-                // console.log(data[i].collectionId)
-                console.log(req.body.Rating)
+                // console.log("Searching...")
+                console.log(req.body.user)
+                console.log(data[i].user)
+                console.log(req.body.collectionid)
+                console.log(data[i].collectionId)
+                // console.log(req.body.Rating)
                 if (req.body.user == data[i].user && req.body.collectionid == data[i].collectionId) {
                     MusicInput.findOneAndUpdate({user: req.body.user, collectionId: req.body.collectionid}, {rating: req.body.Rating}, function(error, doc) {
                         if (error) {
@@ -33,7 +70,7 @@ router.post('/:id', jsonParser, (req, res) => {
                             res.send("Rating has been updated");
                         }
                     })
-                    console.log("Rating has been updated")
+                    updateRating()
                 }
                 else {
                     var submission = new MusicInput();
@@ -63,7 +100,7 @@ router.post('/:id', jsonParser, (req, res) => {
         }
     )
 });
-/*
+*/
 
 router.post('/:id', jsonParser, (req, res) => {
     var submission = new MusicInput();
@@ -89,7 +126,7 @@ router.post('/:id', jsonParser, (req, res) => {
         }
     })
 });
-*/
+
 
 router.get('/:id', jsonParser, (req, res) => {
     console.log(req.params.id);
