@@ -59,31 +59,6 @@ router.post('/:id', jsonParser, (req, res) => {
         })
 })
 
-/*
-router.post('/:id', jsonParser, (req, res) => {
-    var submission = new MusicInput();
-    submission.artist = req.body.Artist;
-    submission.album = req.body.album;
-    submission.artwork = req.body.artwork;
-    submission.genre = req.body.Genre;
-    submission.itunesLink = req.body.BuyOnItunes;
-    submission.rating = req.body.Rating;
-    submission.user = req.params.id;
-    submission.collectionId = req.body.collectionid;
-    MusicInput.create(submission, function(err, submission) {
-        console.log("Adding submission");
-        if (err) { 
-            throw err; 
-        }
-        else {
-            res.json({
-                "We": "received it"
-            })
-        }
-    })
-});
-*/
-
 router.get('/:id', jsonParser, (req, res) => {
     let ret = [];
     let rej = [];
