@@ -105,6 +105,9 @@ router.get('/get-data/leaderboard', jsonParser, (req, res) => {
                 ret.push(music[i]);
             }
             console.log(ret);
+            ret.sort(function(a, b) {
+                return a.rating - b.rating;
+            })
             res.send(ret);
         })
 })
