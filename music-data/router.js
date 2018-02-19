@@ -106,7 +106,7 @@ router.get('/get-data/leaderboard', jsonParser, (req, res) => {
             }
             console.log(ret);
             ret.sort(function(a, b) {
-                return a.rating - b.rating;
+                return b.rating - a.rating;
             })
             res.send(ret);
         })
