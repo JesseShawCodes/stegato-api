@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 
 mongoose.Promise = global.Promise;
 
-const MusicSchema = new Schema ({
+const leaderBoardSchema = new Schema ({
   album: {type: String, default: '', required: true},
   artist: {type: String, default: '', required: true},
   artwork: {type: String, default: ''},
@@ -15,6 +15,6 @@ const MusicSchema = new Schema ({
   collectionId: {type: Number}
 });
 
-var MusicInput = mongoose.model('music', MusicSchema);
+var leaderBoardInput = mongoose.model('leaderboard', leaderBoardSchema);
 
-module.exports = {MusicInput};
+module.exports = {leaderBoardInput};

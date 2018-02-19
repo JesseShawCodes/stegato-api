@@ -10,6 +10,8 @@ const router = express.Router();
 
 const jsonParser = bodyParser.json();
 
+/*User Music Data Posting from users*/
+
 var { MusicInput } = require('./models')
 
 router.post('/:id', jsonParser, (req, res) => {
@@ -83,6 +85,27 @@ router.delete('/', jsonParser, (req, res) => {
         }
     });
     res.status(204).end();
+})
+
+/*Leaderboard Data*/
+
+router.post('/repost/leaderboard', jsonParser, (req, res) => {
+    console.log("LEADBOARD!!");
+    res.send("Hi");
+})
+
+router.get('/get-data/leaderboard', jsonParser, (req, res) => {
+    console.log("getting music data");
+    let ret = [];
+    MusicInput
+        .find()
+        .then(music => {
+            for (var i = 0; i < music.length; i++) {
+                ret.push(music[i]);
+            }
+            console.log(ret);
+            res.send(ret);
+        })
 })
 
 module.exports = {router};
