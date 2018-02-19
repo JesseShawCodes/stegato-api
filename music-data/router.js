@@ -46,6 +46,7 @@ router.post('/:id', jsonParser, (req, res) => {
                 submission.rating = req.body.Rating;
                 submission.user = req.params.id;
                 submission.collectionId = req.body.collectionid;
+                submission.releaseDate = req.body.releaseDate;
                 MusicInput.create(submission, function(err, submission) {
                     console.log("Adding submission");
                     if (err) { 

@@ -13,7 +13,8 @@ const MusicSchema = new Schema ({
   itunesLink: {type: String, default: ''},
   rating: {type: Number, min: 1, max: 5, default: '', required: true},
   user: {type: String, required: true},
-  collectionId: {type: Number}
+  collectionId: {type: Number},
+  releaseDate: {type: Date}
 });
 
 
