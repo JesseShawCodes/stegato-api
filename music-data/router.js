@@ -170,7 +170,7 @@ router.post('/repost/leaderboard', jsonParser, (req, res) => {
 router.get('/get-data/leaderboard', jsonParser, (req, res) => {
     console.log("getting music data");
     let ret = [];
-    MusicInput
+    leaderBoardInput
         .find()
         .then(music => {
             for (var i = 0; i < music.length; i++) {
