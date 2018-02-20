@@ -13,6 +13,7 @@ const jsonParser = bodyParser.json();
 /*User Music Data Posting from users*/
 
 var { MusicInput } = require('./models')
+var { leaderBoardInput } = require('./leaderboard-model');
 
 router.post('/:id', jsonParser, (req, res) => {
     MusicInput
@@ -26,8 +27,34 @@ router.post('/:id', jsonParser, (req, res) => {
                     .findOneAndUpdate({collectionId: req.body.collectionid}, {$set:{rating: req.body.Rating}}, {new: true}, function(err, doc) {
                         if(err){
                             console.log("Something wrong when updating data!");
+                            throw err;
                         }
                         console.log("Entry Updated!")
+                        let oldRating = data[i].rating
+                        leaderBoardInput
+                        .find({collectionId: req.body.collectionid})
+                        .then(function(data) {
+                            let ratingsArray = data[0].allRatings;
+                            console.log(data[0]._id)
+                            console.log(`New rating is ${req.body.Rating}`)
+                            console.log(ratingsArray);
+                            ratingsArray.push(req.body.Rating);
+                            for (var i = 0; i < ratingsArray.length; i++) {
+                                if (ratingsArray[i] === oldRating) {
+                                    console.log("It's a match");
+                                    ratingsArray.splice(i, 1);
+                                    break
+                                }
+                            }
+                            console.log(ratingsArray);
+                            leaderBoardInput
+                            .findByIdAndUpdate(data[0]._id, {$set: {allRatings: ratingsArray}}, {new: true}, function(err, doc) {
+                                if(err){
+                                    console.log("Something wrong when updating data!");
+                                    throw err;
+                                }
+                            })
+                        })
                     })
                     return false                    
                 }
@@ -36,7 +63,6 @@ router.post('/:id', jsonParser, (req, res) => {
                 }
             }
             if (update === false) {
-                console.log("Creating new entry");
                 var submission = new MusicInput();
                 submission.artist = req.body.Artist;
                 submission.album = req.body.album;
@@ -48,19 +74,64 @@ router.post('/:id', jsonParser, (req, res) => {
                 submission.collectionId = req.body.collectionid;
                 submission.releaseDate = req.body.releaseDate;
                 MusicInput.create(submission, function(err, submission) {
-                    console.log("Adding submission");
                     if (err) { 
                         throw err; 
                     }
                     else {
-                        res.json({
-                            "We": "received it"
-                        })
+                        console.log("88: Received submission to database")
                     }
                 })
+                /*Leaderboard Inputs*/
+                let ratings = [];
+                leaderBoardInput
+                    .find({'collectionId': `${req.body.collectionid}`})
+                    .then(function(data) {
+                        var submission = new leaderBoardInput();
+                        submission.artist = req.body.Artist;
+                        submission.album = req.body.album;
+                        submission.artwork = req.body.artwork;
+                        submission.genre = req.body.Genre;
+                        submission.itunesLink = req.body.BuyOnItunes;
+                        submission.collectionId = req.body.collectionid;
+                        submission.releaseDate = req.body.releaseDate;
+                        submission.allRatings.push(req.body.Rating);
+                        leaderBoardInput
+                        .create(submission, function(err, submission) {
+                            if (err) {
+                                throw err;
+                            }
+                            else {
+                                res.json({
+                                    "Hey": "Leaderboard has been updated"
+                                })
+                            }
+                            updateRatingArray(req.body.collectionid, req.body.Rating)
+                        })
+                    })
             }
         })
 })
+
+function updateRatingArray(id, rating) {
+    let ratingsArray = []
+    leaderBoardInput
+    .find({'collectionId': `${id}`})
+    .then(function(data) {
+        ratingsArray = data[0].allRatings
+        var total = 0
+        ratingsArray = data[0].allRatings
+        for (var i = 0; i < ratingsArray.length; i++) {
+            total += ratingsArray[i]
+        }
+        var avg = total/ratingsArray.length
+        leaderBoardInput
+        .findByIdAndUpdate(data[0]._id, {$set:{rating: avg}}, {new: true}, function(err, doc) {
+            if(err) {
+                throw err;
+            }
+        })
+    })
+}
 
 router.get('/:id', jsonParser, (req, res) => {
     let ret = [];

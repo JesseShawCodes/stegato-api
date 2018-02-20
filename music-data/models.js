@@ -14,7 +14,8 @@ const MusicSchema = new Schema ({
   rating: {type: Number, min: 1, max: 5, default: '', required: true},
   user: {type: String, required: true},
   collectionId: {type: Number},
-  releaseDate: {type: Date}
+  releaseDate: {type: Date},
+  updated: { type: Date, default: Date.now }
 });
 
 
