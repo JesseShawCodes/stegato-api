@@ -31,6 +31,7 @@ router.post('/:id', jsonParser, (req, res) => {
                         }
                         console.log("Entry Updated!")
                         let oldRating = data[i].rating
+                        let newRating = req.body.collectionid;
                         leaderBoardInput
                         .find({collectionId: req.body.collectionid})
                         .then(function(data) {
@@ -41,7 +42,6 @@ router.post('/:id', jsonParser, (req, res) => {
                             ratingsArray.push(req.body.Rating);
                             for (var i = 0; i < ratingsArray.length; i++) {
                                 if (ratingsArray[i] === oldRating) {
-                                    console.log("It's a match");
                                     ratingsArray.splice(i, 1);
                                     break
                                 }
@@ -53,6 +53,7 @@ router.post('/:id', jsonParser, (req, res) => {
                                     console.log("Something wrong when updating data!");
                                     throw err;
                                 }
+                                updateRatingArray(newRating)
                             })
                         })
                     })
@@ -105,14 +106,14 @@ router.post('/:id', jsonParser, (req, res) => {
                                     "Hey": "Leaderboard has been updated"
                                 })
                             }
-                            updateRatingArray(req.body.collectionid, req.body.Rating)
+                            updateRatingArray(req.body.collectionid)
                         })
                     })
             }
         })
 })
 
-function updateRatingArray(id, rating) {
+function updateRatingArray(id) {
     let ratingsArray = []
     leaderBoardInput
     .find({'collectionId': `${id}`})
