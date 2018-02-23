@@ -339,6 +339,9 @@ router.get('/:id', jsonParser, (req, res) => {
                 }
                 else rej.push(post[i]);
             }
+            ret.sort(function(a, b) {
+                return b.rating - a.rating;
+            })
             // console.log(ret);
             res.send(ret);
         })
@@ -354,11 +357,6 @@ router.delete('/', jsonParser, (req, res) => {
 })
 
 /*Leaderboard Data*/
-
-router.post('/repost/leaderboard', jsonParser, (req, res) => {
-    console.log("LEADBOARD!!");
-    res.send("Hi");
-})
 
 router.get('/get-data/leaderboard', jsonParser, (req, res) => {
     console.log("getting music data");
