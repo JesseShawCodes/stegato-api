@@ -162,7 +162,6 @@ function updateLeaderRating(identifier) {
             total += ratings[i]
         }
         var avg = total/ratings.length
-        Math.round(avg * 100)/100
         console.log(`Line 165: ${avg}`)
         leaderBoardInput
         .findOneAndUpdate({collectionId: identifier}, {$set: {rating: avg}}, {new: true}, function(err, doc) {
