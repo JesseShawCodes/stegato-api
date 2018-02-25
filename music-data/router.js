@@ -15,12 +15,6 @@ const jsonParser = bodyParser.json();
 var { MusicInput } = require('./models')
 var { leaderBoardInput } = require('./leaderboard-model');
 
-/*
-The Post works as follows
-
--When a user posts an album, a search is performed of the user level mongoDb
-*/
-
 router.post('/:id', jsonParser, (req, res) => {
     let update = false
     let oldRating;
@@ -35,7 +29,6 @@ router.post('/:id', jsonParser, (req, res) => {
                 }
             }
             if (update === false) {
-                console.log("Creating new Post");
                 newPost(req)
             }
             }
@@ -43,7 +36,6 @@ router.post('/:id', jsonParser, (req, res) => {
 })
 
 function newPost(data) {
-    console.log("Adding post");
     var submission = new MusicInput();
     submission.artist = data.body.Artist;
     submission.album = data.body.album;
@@ -59,7 +51,6 @@ function newPost(data) {
             throw err; 
         }
         else {
-            console.log("52: Received submission to database")
             leaderBoardFilter(data, null, null)
         }
     })
@@ -67,11 +58,9 @@ function newPost(data) {
 
 
 function editPost(data, ratingToUpdate) {
-    console.log("editing post");
     MusicInput
     .findOneAndUpdate({collectionId: data.body.collectionid}, {$set:{rating: data.body.Rating}}, {new: true}, function(err, doc) {
         if(err){
-            console.log("Something wrong when updating data!");
             throw err;
         }
         let oldRating = ratingToUpdate;
@@ -82,26 +71,19 @@ function editPost(data, ratingToUpdate) {
 }
 
 function leaderBoardFilter(data, oldRate, newRate) {
-    console.log("Leaderboard Filter Triggered");
     let update = false;
     leaderBoardInput
     .find()
     .then(function(results) {
         for (var i = 0; i < results.length; i++) {
             if (results[i].collectionId == data.body.collectionid) {
-                console.log("It's a match bro")
                 update = true;
-                // console.log(data.body)
-                // editLeaderBoardAlbum(results[i].collectionId, data.body.Rating, null)
-                // break
             }
         }
         if (update == true) {
-            console.log("Update leaderboard")
             editLeaderBoardAlbum(data, oldRate, newRate);
         }
         else if (update == false) {
-            console.log("Create new data point")
             newLeaderBoardAlbum(data, oldRate, newRate);
         }
     })
@@ -123,7 +105,6 @@ function newLeaderBoardAlbum(data, oldRating, newRating) {
             throw err;
         }
         else {
-            console.log("Leaderboard data point created...")
             updateLeaderRating(submission.collectionId);
         }
     })
@@ -138,21 +119,17 @@ function editLeaderBoardAlbum(data, oldRating, newRating) {
         for (var i = 0; i < data.length; i++) {
             updatedRatingsArray.push(data[i].rating)
         }
-        console.log(`141: ${updatedRatingsArray}`)
         leaderBoardInput
         .findOneAndUpdate({collectionId: collectionToDelete}, {$set: {allRatings: updatedRatingsArray}}, {new: true}, function(err, doc) {
             if (err) {
-                console.log("something went wrong")
                 throw err;
             }
-            console.log(`148: ${updatedRatingsArray}`)
             updateLeaderRating(collectionToDelete);
         })
     })
 }
 
 function updateLeaderRating(identifier) {
-    console.log("Testing")
     leaderBoardInput
     .findOne({collectionId: identifier})
     .then(function(data) {
@@ -162,11 +139,9 @@ function updateLeaderRating(identifier) {
             total += ratings[i]
         }
         var avg = total/ratings.length
-        console.log(`Line 165: ${avg}`)
         leaderBoardInput
         .findOneAndUpdate({collectionId: identifier}, {$set: {rating: avg}}, {new: true}, function(err, doc) {
            if (err) {
-               console.log("something went wrong")
                throw err;
            }
        })
@@ -189,7 +164,6 @@ router.get('/:id', jsonParser, (req, res) => {
             ret.sort(function(a, b) {
                 return b.rating - a.rating;
             })
-            // console.log(ret);
             res.send(ret);
         })
 })
@@ -206,7 +180,6 @@ router.delete('/', jsonParser, (req, res) => {
 /*Leaderboard Data*/
 
 router.get('/get-data/leaderboard', jsonParser, (req, res) => {
-    console.log("getting music data");
     let ret = [];
     leaderBoardInput
         .find()
@@ -214,7 +187,6 @@ router.get('/get-data/leaderboard', jsonParser, (req, res) => {
             for (var i = 0; i < music.length; i++) {
                 ret.push(music[i]);
             }
-            // console.log(ret);
             ret.sort(function(a, b) {
                 return b.rating - a.rating;
             })

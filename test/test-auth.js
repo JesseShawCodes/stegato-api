@@ -1,5 +1,6 @@
 'use strict';
-const { PORT, DATABASE_URL } = require('../config');
+// const { PORT, DATABASE_URL } = require('../config');
+global.DATABASE_URL = 'mongodb://localhost/stegatto'
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const jwt = require('jsonwebtoken');
